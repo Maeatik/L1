@@ -1,5 +1,7 @@
 package main
 
+//Реализовать паттерн «адаптер» на любом примере.
+
 import "fmt"
 
 type duck interface {

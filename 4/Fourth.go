@@ -15,13 +15,13 @@ import (
 //
 //Программа должна завершаться по нажатию Ctrl+C. Выбрать и обосновать способ завершения работы всех воркеров.
 func workers(n int) {
-
+	//создается канал для чисел
 	c := make(chan int)
-
+	//Создание N воркеров и передача им данных из канала
 	for i := 1; i <= n; i++ {
 		go worker(i, c)
 	}
-
+	//Передача в канал случайных чисел для воркеров каждую секунду
 	go func() {
 		rand.Seed(time.Now().UnixNano())
 		for {
@@ -45,13 +45,16 @@ func nWorker() (int, error) {
 	return n, err
 }
 func main() {
+	//Введем количество воркеров
 	n, err := nWorker()
 	if err != nil {
 		return
 	}
+	//Запускаем постоянную запись в канал
 	workers(n)
-
+	//Создаем канал, который будет ждать остановки программы
 	c := make(chan os.Signal)
+	//Ctrl+C
 	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
 
 	<-c

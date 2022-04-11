@@ -22,16 +22,20 @@ func messagePerSec(wg *sync.WaitGroup, n int) {
 	c := make(chan int)
 	go func() {
 		for {
+			//случайное число передается в канал
 			c <- rand.Intn(100000)
 			time.Sleep(1000 * time.Millisecond)
+			//После каждой секунды - счетчик уменьшается
 			wg.Done()
 		}
 	}()
 	go func() {
 		for {
+			//печать числа из канала
 			fmt.Printf("%d\n", <-c)
 		}
 	}()
+	//Ожидание того, когда счетчик опустится до 0, то есть через n секунд
 	wg.Wait()
 
 }
@@ -41,7 +45,10 @@ func main() {
 	if err != nil {
 		return
 	}
+	//Создаем переменную для ожидания горутин
 	var wg sync.WaitGroup
+	//Увеличиваем счетчик ожидания горутин на n
 	wg.Add(n)
+
 	messagePerSec(&wg, n)
 }

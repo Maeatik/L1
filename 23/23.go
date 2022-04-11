@@ -1,5 +1,7 @@
 package main
 
+//Удалить i-ый элемент из слайса.
+
 import "fmt"
 
 func whatI() (int, error) {
@@ -8,6 +10,9 @@ func whatI() (int, error) {
 	_, err := fmt.Scanf("%d \n", &n)
 	return n, err
 }
+
+//быстрый вариант - он меняет выбранный для удаления элемент и крайний правый.
+//После этого, крайний правый элемент удаляется
 func vers_1(slice []string) {
 	i, err := whatI()
 	if err != nil {
@@ -19,6 +24,8 @@ func vers_1(slice []string) {
 	fmt.Println(slice)
 }
 
+//медленный вариант. В слайс копируется этот же слайс, но без i-го элемента. Чем больше слайс - тем дольше выполняется,
+//но зато последний элемент слайса не в середине
 func vers_2(slice []string) {
 	i, err := whatI()
 	if err != nil {
@@ -30,6 +37,7 @@ func vers_2(slice []string) {
 	fmt.Println(slice)
 }
 
+//К слайсу добвляется его вторая половина, кроме i-го числа
 func vers_3(slice []string) {
 	i, err := whatI()
 	if err != nil {

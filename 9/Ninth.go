@@ -9,20 +9,25 @@ import (
 //во второй — результат операции x*2, после чего данные из второго канала должны выводиться в stdout.
 
 func toChannel(wg *sync.WaitGroup, arr []int, ch chan int) {
+	//отложенное уменьшение счетчика
 	defer wg.Done()
 	for _, i := range arr {
+		//в канал добавляются числа из массива
 		ch <- i
 	}
+	//далее он закрывается
 	close(ch)
 }
 func fromChannel(wg *sync.WaitGroup, ch1 chan int, ch2 chan int) {
 	defer wg.Done()
-
+	//Пока есть числа в канале он получает оттуда данные
 	for {
 		x, flag := <-ch1
+		//если чисел нет, цикл останавливается
 		if !flag {
 			break
 		}
+		//во второй канал, через переменную х передаются числа и умножаются на 2
 		ch2 <- x * 2
 	}
 	close(ch2)
@@ -30,18 +35,21 @@ func fromChannel(wg *sync.WaitGroup, ch1 chan int, ch2 chan int) {
 func main() {
 	arr := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 	wg := sync.WaitGroup{}
-
+	//Создается два канала. В первый передаются числа из массива,
+	//во второй передаются из первого канала, а потом выводятся в консоль
 	ch1 := make(chan int)
 	ch2 := make(chan int)
+	//так как канала 2, то счетчик ожидания сразу увеличивается на 2
 	wg.Add(2)
-
+	//запускаются горутины на ввод в первый канал и передачу из 1 во 2-ой
 	go toChannel(&wg, arr, ch1)
 	go fromChannel(&wg, ch1, ch2)
-
+	//прием данных из второго канала
 	go func() {
 		for {
 			fmt.Printf("%d\n", <-ch2)
 		}
 	}()
+	//ожидание обнуления счетчиков в горутине
 	wg.Wait()
 }

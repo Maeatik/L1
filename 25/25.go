@@ -1,10 +1,13 @@
 package main
 
+//Реализовать собственную функцию sleep.
+
 import (
 	"fmt"
 	"time"
 )
 
+//Функция Sleep которая ждет X секунд
 func Sleep(x int) {
 	<-time.After(time.Second * time.Duration(x))
 }
