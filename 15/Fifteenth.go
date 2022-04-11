@@ -2,13 +2,11 @@ package main
 
 import (
 	"fmt"
-	"strings"
 )
 
 //К каким негативным последствиям может привести данный фрагмент кода, и как это исправить?
 //Приведите корректный пример реализации.
-//
-//
+
 //var justString string
 //
 //func someFunc() {
@@ -19,18 +17,29 @@ import (
 //func main() {
 //	someFunc()
 //}
-func main() {
-	n := 1 << 10
-	var v strings.Builder
 
-	v.Grow(n)
-	for x := 0; x < n; x++ {
-		v.WriteRune('1')
+var justString string
+
+func createHugeString(i int) string {
+	s := ""
+	for n := 0; n < i; n++ {
+		s = s + "a"
 	}
+	return s
+}
 
-	vs := v.String()
-	fmt.Println(vs[:10])
-
-	runes := []rune(vs)
-	fmt.Println(string(runes[:10]))
+func someFunc() {
+	v := createHugeString(1 << 10)
+	justString = v[:]
+	fmt.Println(justString)
+}
+func someFunc_good() {
+	v := createHugeString(1 << 10)
+	tmp := make([]rune, 100)
+	copy(tmp, []rune(v[0:100]))
+	justString = string(tmp)
+}
+func main() {
+	someFunc()
+	someFunc_good()
 }
